@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="#80262626"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:background="#FFFFFF"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:background="#FFFFFF"
+            android:textSize="25sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-1dp"
+            android:text="Scan Type"
+            />
+        <LinearLayout
+            android:layout_below="@id/appName"
+            android:layout_centerInParent="true"
+            android:weightSum="3"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:id="@+id/barcode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/barcode"/>
+            <Button
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:background="@color/colorPrimary"
+                android:id="@+id/qrcode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/qrcode"/>
+            <Button
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:background="@color/colorPrimary"
+                android:id="@+id/finish"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/finish"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

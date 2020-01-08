@@ -1,11 +1,25 @@
-package com.example.ripo.scientificcalculator;
+package com.sr.team.scientificcalculator;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,24 +31,41 @@ public class MainActivity extends AppCompatActivity {
     private Button mode,toggle,square,xpowy,log,sin,cos,tan,sqrt,fact;
     private int toggleMode=1;
     private int angleMode=1;
+     ImageView imvScan;
+    InterstitialAd mInterstitialAd;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        /*banner ad*/
+
+        AdView mAdView = findViewById(R.id.adView);
+        MobileAds.initialize(this, getResources().getString(R.string.banner_id));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        /*mInterstitial Ad*/
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
         tvFnum =  findViewById(R.id.tv_fnum);
         tvSnum =  findViewById(R.id.tv_snum);
-        mode = (Button) findViewById(R.id.mode);
-        toggle = (Button) findViewById(R.id.toggle);
-        square = (Button) findViewById(R.id.square);
-        xpowy = (Button) findViewById(R.id.xpowy);
-        log = (Button) findViewById(R.id.log);
-        sin = (Button) findViewById(R.id.sin);
-        cos = (Button) findViewById(R.id.cos);
-        tan = (Button) findViewById(R.id.tan);
-        sqrt= (Button) findViewById(R.id.sqrt);
-        fact = (Button) findViewById(R.id.factorial);
+        mode =  findViewById(R.id.mode);
+        toggle =  findViewById(R.id.toggle);
+        square = findViewById(R.id.square);
+        xpowy =  findViewById(R.id.xpowy);
+        log =  findViewById(R.id.log);
+        sin =  findViewById(R.id.sin);
+        cos = findViewById(R.id.cos);
+        tan =  findViewById(R.id.tan);
+        sqrt=  findViewById(R.id.sqrt);
+        fact =  findViewById(R.id.factorial);
+        imvScan =  findViewById(R.id.imvScan);
 
         tvSnum.setText("");
 
@@ -42,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
         mode.setTag(1);
         //tags to change the names of the buttons performing different operations
         toggle.setTag(1);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        adShow();
+        onAddLodded();
     }
 
     public void onClick(View v)
@@ -452,12 +491,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.openBracket:
                 tvFnum.setText(tvFnum.getText() + "(");
                 break;
-
             case R.id.closeBracket:
                 if(tvSnum.length()!=0)
                     tvFnum.setText(tvFnum.getText() + tvSnum.getText().toString()+ ")");
                 else
                     tvFnum.setText(tvFnum.getText() + ")");
+                break;
+
+
+
+            case R.id.imvScan:
+                showPopupScanType();
                 break;
         }
     }
@@ -475,5 +519,117 @@ public class MainActivity extends AppCompatActivity {
                 tvFnum.setText(newText);
             }
         }
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Log.e("Scan*******", "Cancelled scan");
+                Toast.makeText(this, "Cancelled scan", Toast.LENGTH_LONG).show();
+                onAddLodded();
+                adShow();
+            } else {
+                Log.e("Scan", "Scanned");
+                showPopup(""+result.getContents());
+            }
+        } else {
+            // This is important, otherwise the result will not be passed to the fragment
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+    }
+
+    public void openScanner(Collection<String> scannerType, int promptId) {
+        IntentIntegrator integrator =  new IntentIntegrator(this);
+        // use forSupportFragment or forFragment method to use fragments instead of activity
+        integrator.setDesiredBarcodeFormats(scannerType);
+        integrator.setPrompt(this.getString(promptId));
+        integrator.setCameraId(0);
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
+
+
+    private void showPopup(String scanresult) {
+        final Dialog d = new Dialog(this, android.R.style.Theme_Translucent);
+        d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(R.layout.scanner_result);
+        d.setCancelable(false);
+
+        final Button finish = d.findViewById(R.id.finish);
+        final TextView result = d.findViewById(R.id.Scanresult);
+
+        result.setText("Scanned: "+scanresult);
+
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddLodded();
+                adShow();
+                d.dismiss();
+            }
+        });
+
+
+        d.show();
+    }
+    private void showPopupScanType() {
+        final Dialog d = new Dialog(this, android.R.style.Theme_Translucent);
+        d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(R.layout.scanner_type);
+        d.setCancelable(false);
+
+        final Button barcode = d.findViewById(R.id.barcode);
+        final Button qrcode = d.findViewById(R.id.qrcode);
+        final Button finish = d.findViewById(R.id.finish);
+
+
+
+        barcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openScanner(IntentIntegrator.ONE_D_CODE_TYPES, R.string.barcodescanner);
+                d.dismiss();
+            }
+        });
+
+        qrcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openScanner(IntentIntegrator.QR_CODE_TYPES, R.string.qr_code_scanner);
+                d.dismiss();
+            }
+        });
+
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAddLodded();
+                adShow();
+                d.dismiss();
+            }
+        });
+
+
+        d.show();
+    }
+
+    public void adShow() {
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    public void onAddLodded() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        }
+
     }
 }

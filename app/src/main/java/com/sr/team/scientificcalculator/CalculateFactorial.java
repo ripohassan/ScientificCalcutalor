@@ -1,4 +1,4 @@
-package com.example.ripo.scientificcalculator;
+package com.sr.team.scientificcalculator;
 
 /**
  * Created by Anubhav on 14-03-2016.

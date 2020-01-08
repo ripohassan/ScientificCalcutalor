@@ -1,4 +1,4 @@
-package com.example.ripo.scientificcalculator;
+package com.sr.team.scientificcalculator;
 
 import org.junit.Test;
 
