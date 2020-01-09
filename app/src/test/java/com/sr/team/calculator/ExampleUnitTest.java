@@ -1,4 +1,4 @@
-package com.sr.team.scientificcalculator;
+package com.sr.team.calculator;
 
 import org.junit.Test;
 

@@ -38,8 +38,9 @@
     <string name="qr_code_scanner">QR Code Scanner</string>
 
     <!--Ad mob Ads Id Setup-->
-    <string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
-    <string name="banner_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="app_id">ca-app-pub-6332902664669045~7786844079</string>
+    <string name="banner_id">ca-app-pub-6332902664669045/9050634911</string>
+    <string name="interstitial_id">ca-app-pub-6332902664669045/9564079730</string>
     <string name="finish">Finish</string>
-</resources>
+    <string name="cancel">Cancel</string>
+</resources> 

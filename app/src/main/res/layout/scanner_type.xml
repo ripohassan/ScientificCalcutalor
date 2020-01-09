@@ -62,7 +62,7 @@
                 android:id="@+id/finish"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/finish"/>
+                android:text="@string/cancel"/>
 
         </LinearLayout>
 

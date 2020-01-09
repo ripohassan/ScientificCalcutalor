@@ -1,4 +1,4 @@
-package com.sr.team.scientificcalculator;
+package com.sr.team.calculator;
 
 /**
  * Created by Anubhav on 14-03-2016.

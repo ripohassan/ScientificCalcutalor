@@ -1,4 +1,4 @@
-package com.sr.team.scientificcalculator;
+package com.sr.team.calculator;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

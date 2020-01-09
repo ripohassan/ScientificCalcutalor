@@ -1,6 +1,8 @@
-package com.sr.team.scientificcalculator;
+package com.sr.team.calculator;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private int angleMode=1;
      ImageView imvScan;
     InterstitialAd mInterstitialAd;
+    private ClipboardManager myClipboard;
+    private ClipData myClip;
 
 
     @Override
@@ -554,7 +558,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showPopup(String scanresult) {
+    private void showPopup(final String scanresult) {
         final Dialog d = new Dialog(this, android.R.style.Theme_Translucent);
         d.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         d.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -563,6 +567,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Button finish = d.findViewById(R.id.finish);
         final TextView result = d.findViewById(R.id.Scanresult);
+        final ImageView imvCopy = d.findViewById(R.id.imvCopy);
 
         result.setText("Scanned: "+scanresult);
 
@@ -572,6 +577,17 @@ public class MainActivity extends AppCompatActivity {
                 onAddLodded();
                 adShow();
                 d.dismiss();
+            }
+        });
+
+        imvCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+
+                myClip = ClipData.newPlainText("Result", scanresult);
+                myClipboard.setPrimaryClip(myClip);
+                Toast.makeText(getApplicationContext(), "Text Copied",Toast.LENGTH_SHORT).show();
             }
         });
 
